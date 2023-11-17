@@ -45,6 +45,11 @@ check_any() {
 	return 1
 }
 
+if [[ "${ENABLE_KEY_COMBINATIONS}" != "1" ]]; then
+	debug "Checking for key combinations is disabled on this system."
+	exit 0
+fi
+
 if check_any "EV_KEY" "BTN_SELECT" || check_any "EV_KEY" "KEY_TAB"; then
 	debug "SELECT held"
 	echo "${JOVIAN_RESCUE_SESSION:-jovian-rescue}"
