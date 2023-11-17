@@ -3,6 +3,7 @@ set -euo pipefail
 
 #
 # This script outputs a session name on stdout, to bypass the default selection, or nothing.
+# When SELECT (or TAB) is held, the `$JOVIAN_RESCUE_SESSION` or `jovian-rescue` session is started.
 # When START (or ESC) is held, the `$JOVIAN_DESKTOP_SESSION` or `plasma` session is started.
 #
 
@@ -43,6 +44,13 @@ check_any() {
 
 	return 1
 }
+
+if check_any "EV_KEY" "BTN_SELECT" || check_any "EV_KEY" "KEY_TAB"; then
+	debug "SELECT held"
+	echo "${JOVIAN_RESCUE_SESSION:-jovian-rescue}"
+
+	exit
+fi
 
 if check_any "EV_KEY" "BTN_START" || check_any "EV_KEY" "KEY_ESC"; then
 	debug "START held"
