@@ -59,6 +59,25 @@ in
             Implementation detail for the rescue session (holding select/back).
           '';
         };
+
+        enableRescueCombinations = mkOption {
+          type = types.bool;
+          default = true;
+          description = lib.mdDoc ''
+            Enables use of some button combinations when launching the
+            graphical session to do specific tasks.
+
+             - Holding the start/menu button, or Escape, goes to the configured desktopSession
+             - Holding the select/back button, or Tab, goes to a rescue applet
+
+            Disabling this may be desirable if you are relying on a Steam PIN
+            as a security measure against use of the desktop session.
+
+            With this enabled, if steam misbehaves, you can relaunch/reboot
+            directly to the desktop session, without requiring some
+            alternative form of access to the system (e.g. SSH).
+          '';
+        };
       };
     };
   };
@@ -145,6 +164,7 @@ in
           "jovian-greeter.conf" = {
             text = ''
               # `source`-able config for jovian-greeter
+              ENABLE_KEY_COMBINATIONS=${escapeShellArg cfg.enableRescueCombinations}
               JOVIAN_DESKTOP_SESSION=${escapeShellArg cfg.desktopSession}
               JOVIAN_RESCUE_SESSION=${escapeShellArg cfg.rescueSession}
             '';
