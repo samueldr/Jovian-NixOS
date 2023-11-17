@@ -50,6 +50,15 @@ in
             Gaming Mode again.
           '';
         };
+
+        rescueSession = mkOption {
+          type = types.str;
+          default = "jovian-rescue";
+          internal = true;
+          description = lib.mdDoc ''
+            Implementation detail for the rescue session (holding select/back).
+          '';
+        };
       };
     };
   };
@@ -137,6 +146,7 @@ in
             text = ''
               # `source`-able config for jovian-greeter
               JOVIAN_DESKTOP_SESSION=${escapeShellArg cfg.desktopSession}
+              JOVIAN_RESCUE_SESSION=${escapeShellArg cfg.rescueSession}
             '';
           };
         };
