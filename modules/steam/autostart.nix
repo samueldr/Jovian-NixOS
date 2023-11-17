@@ -2,6 +2,7 @@
 
 let
   inherit (lib)
+    escapeShellArg
     mkIf
     mkMerge
     mkOption
@@ -131,6 +132,14 @@ in
       environment = {
         systemPackages = [ pkgs.jovian-greeter.helper ];
         pathsToLink = [ "lib/jovian-greeter" ];
+        etc = {
+          "jovian-greeter.conf" = {
+            text = ''
+              # `source`-able config for jovian-greeter
+              JOVIAN_DESKTOP_SESSION=${escapeShellArg cfg.desktopSession}
+            '';
+          };
+        };
       };
       security.polkit.extraConfig = ''
         polkit.addRule(function(action, subject) {
