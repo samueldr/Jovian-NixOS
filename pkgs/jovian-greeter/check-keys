@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+#
+# This script outputs a session name on stdout, to bypass the default selection, or nothing.
+# When START (or ESC) is held, the `$JOVIAN_DESKTOP_SESSION` or `plasma` session is started.
+#
+
+# shellcheck disable=SC1091
+if test -f /etc/jovian-greeter.conf; then
+source /etc/jovian-greeter.conf
+fi
+
+EVTEST="evtest"
+
+debug() {
+	local str="$1"; shift
+	if [[ "${DEBUG:-}" != "" ]]; then
+		# shellcheck disable=SC2059
+		>&2 printf "DEBUG: $str\n" "$@"
+	fi
+}
+
+# Checks for 
+check_any() {
+	event="$1"; shift
+	key="$1"; shift
+	for device in /dev/input/event*; do
+		if test -r "$device"; then
+			# Due to weirdness in how gamepad events work, we have to "pump out" one event first.
+			"$EVTEST" --query "$device" "$event" "$key"
+			"$EVTEST" --query "$device" "$event" "$key"
+			if (( $? == 10 )); then
+				debug "%s held on %s" "$key" "$device"
+				return 0
+			else
+				debug "%s not held on %s" "$key" "$device"
+			fi
+		else
+			debug "Can't read %s; this might be okay, as long as some device reads." "$device"
+		fi
+	done
+
+	return 1
+}
+
+if check_any "EV_KEY" "BTN_START" || check_any "EV_KEY" "KEY_ESC"; then
+	debug "START held"
+	echo "${JOVIAN_DESKTOP_SESSION:-plasma}"
+
+	exit
+fi

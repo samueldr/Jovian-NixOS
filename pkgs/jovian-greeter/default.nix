@@ -1,4 +1,10 @@
-{ stdenv, python3, shellcheck, nodePackages, makeWrapper }:
+{ stdenv
+, evtest
+, python3
+, shellcheck
+, nodePackages
+, makeWrapper
+}:
 
 stdenv.mkDerivation {
   name = "jovian-greeter";
@@ -7,7 +13,12 @@ stdenv.mkDerivation {
 
   src = ./.;
 
-  buildInputs = [ python3 shellcheck nodePackages.pyright makeWrapper ];
+  buildInputs = [
+    python3
+    shellcheck
+    nodePackages.pyright
+    makeWrapper
+  ];
 
   dontConfigure = true;
 
@@ -15,6 +26,9 @@ stdenv.mkDerivation {
     runHook preBuild
 
     shellcheck ./consume-session
+    substituteInPlace ./check-keys \
+      --replace 'EVTEST="evtest"' 'EVTEST="${evtest}/bin/evtest"'
+    shellcheck ./check-keys
     pyright *.py
 
     runHook postBuild
@@ -30,6 +44,7 @@ stdenv.mkDerivation {
 
     mkdir -p $helper/lib/jovian-greeter
     cp ./consume-session $helper/lib/jovian-greeter
+    cp ./check-keys $helper/lib/jovian-greeter
 
     runHook postInstall
   '';

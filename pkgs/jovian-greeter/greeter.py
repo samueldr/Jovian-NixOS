@@ -126,6 +126,19 @@ class Context:
         return self._find_sessions(sessions)
 
     def _consume_session(self) -> Optional[str]:
+        helper = HELPER_PREFIX.joinpath('check-keys')
+        if helper.exists():
+            logging.error('Checking for rescue keys being held')
+            res = subprocess.run(
+                [helper],
+                stdin=subprocess.DEVNULL,
+                capture_output=True,
+                check=True,
+            )
+            next_session = res.stdout.decode('utf-8').strip()
+            if next_session:
+                return next_session
+
         helper = HELPER_PREFIX.joinpath('consume-session')
         if helper.exists():
             logging.debug('Using pkexec helper')
