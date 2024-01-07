@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Jovian NixOS
+Description=Jovian NixOS Splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/jovian
+ScriptFile=/usr/share/plymouth/themes/jovian/jovian.script

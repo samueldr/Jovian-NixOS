@@ -52,6 +52,7 @@ rec {
 
   jovian-stubs = final.callPackage ./pkgs/jovian-stubs { };
   jovian-greeter = final.callPackage ./pkgs/jovian-greeter { };
+  jovian-plymouth = final.callPackage ./pkgs/jovian-plymouth { logo = ./artwork/logo/splash.png; };
   jovian-steam-protocol-handler = final.callPackage ./pkgs/jovian-steam-protocol-handler { };
   jovian-support-scripts = final.callPackage ./pkgs/jovian-support-scripts { };
   jovian-updater-logo-helper = final.callPackage ./pkgs/jovian-updater-logo-helper { };
