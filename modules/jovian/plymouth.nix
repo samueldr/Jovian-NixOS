@@ -26,11 +26,10 @@
         "systemd-user-sessions.service"
       ];
       before = [
-        # ???
-        #"getty@tty1.service"
+        "getty@tty1.service"
       ];
       serviceConfig = {
-        type = "oneshot";
+        Type = "oneshot";
         ExecStart = "${pkgs.plymouth}/bin/plymouth deactivate";
         TimeoutSec = 2;
         RemainAfterExit = true;
@@ -43,10 +42,6 @@
         ];
         After = [
           "plymouth-deactivate.service"
-        ];
-        Conflicts = [
-          "plymouth-quit.service"
-          "plymouth-quit-wait.service"
         ];
       };
     };
