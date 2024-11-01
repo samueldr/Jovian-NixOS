@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+#
+# Tips for debugging:
+#
+#  - Pass `'canvas:red[128x64!]'` as the input image.
+#
+
 set -e
 set -u
 PS4=" $ "
